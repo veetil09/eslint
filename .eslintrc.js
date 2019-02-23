@@ -1,7 +1,21 @@
 "use strict";
 
+/*
+ * Workaround for VSCode.
+ * For some reason, Node.js in VSCode is using small case drive letters: `c:\path\to\file`.
+ * For some reason, `eslint-plugin-rulesdir` that this file loaded, it's using large case drive letter: `C:\path\to\file`
+ * As a result, Node.js loads different two `eslint-plugin-rulesdir` package!
+ */
+const driveLetter = module.parent.filename[0];
+let rulesDirPluginPath = require.resolve("eslint-plugin-rulesdir");
+
+// If drive letter casing is different to the parent file, fix it.
+if (rulesDirPluginPath[0] !== driveLetter) {
+    rulesDirPluginPath = driveLetter + rulesDirPluginPath.slice(1);
+}
+
 const path = require("path");
-const rulesDirPlugin = require("eslint-plugin-rulesdir");
+const rulesDirPlugin = require(rulesDirPluginPath);
 
 rulesDirPlugin.RULES_DIR = path.join(__dirname, "tools/internal-rules");
 

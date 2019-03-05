@@ -7,64 +7,73 @@
 
 const baseConfigProperties = {
     env: { type: "object" },
+    extends: { $ref: "#/definitions/stringOrStrings" },
     globals: { type: "object" },
+    overrides: {
+        type: "array",
+        items: { $ref: "#/definitions/overrideConfig" },
+        additionalItems: false
+    },
     parser: { type: ["string", "null"] },
     parserOptions: { type: "object" },
     plugins: { type: "array" },
     rules: { type: "object" },
-    settings: { type: "object" },
-
-    ecmaFeatures: { type: "object" } // deprecated; logs a warning when used
+    settings: { type: "object" }
 };
 
-const overrideProperties = Object.assign(
-    {},
-    baseConfigProperties,
-    {
-        files: {
-            oneOf: [
+const configSchema = {
+    definitions: {
+        stringOrStrings: {
+            anyOf: [
                 { type: "string" },
                 {
                     type: "array",
                     items: { type: "string" },
-                    minItems: 1
+                    uniqueItems: true
                 }
             ]
         },
-        excludedFiles: {
-            oneOf: [
+        stringOrStringsRequired: {
+            anyOf: [
                 { type: "string" },
                 {
                     type: "array",
-                    items: { type: "string" }
+                    items: { type: "string" },
+                    minItems: 1,
+                    uniqueItems: true
                 }
             ]
-        }
-    }
-);
+        },
 
-const topLevelConfigProperties = Object.assign(
-    {},
-    baseConfigProperties,
-    {
-        extends: { type: ["string", "array"] },
-        root: { type: "boolean" },
-        overrides: {
-            type: "array",
-            items: {
-                type: "object",
-                properties: overrideProperties,
-                required: ["files"],
-                additionalProperties: false
-            }
-        }
-    }
-);
+        // Config at top-level.
+        topLevelConfig: {
+            type: "object",
+            properties: Object.assign(
+                {
+                    ecmaFeatures: { type: "object" }, // deprecated; logs a warning when used
+                    root: { type: "boolean" }
+                },
+                baseConfigProperties
+            ),
+            additionalProperties: false
+        },
 
-const configSchema = {
-    type: "object",
-    properties: topLevelConfigProperties,
-    additionalProperties: false
+        // Config in `overrides`.
+        overrideConfig: {
+            type: "object",
+            properties: Object.assign(
+                {
+                    excludedFiles: { $ref: "#/definitions/stringOrStrings" },
+                    files: { $ref: "#/definitions/stringOrStringsRequired" }
+                },
+                baseConfigProperties,
+            ),
+            required: ["files"],
+            additionalProperties: false
+        }
+    },
+
+    $ref: "#/definitions/topLevelConfig"
 };
 
 module.exports = configSchema;

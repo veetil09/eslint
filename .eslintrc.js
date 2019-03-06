@@ -42,7 +42,7 @@ module.exports = {
     },
     overrides: [
         {
-            files: ["lib/rules/*", "tools/internal-rules/*"],
+            files: ["lib/rules/*.js", "tools/internal-rules/*.js"],
             rules: {
                 "rulesdir/no-invalid-meta": "error",
                 "rulesdir/consistent-docs-description": "error"
@@ -53,12 +53,12 @@ module.exports = {
                  */
             }
         }, {
-            files: ["lib/rules/*"],
+            files: ["lib/rules/*.js"],
             rules: {
                 "rulesdir/consistent-docs-url": "error"
             }
         }, {
-            files: ["tests/**/*"],
+            files: ["tests/**/*.js"],
             env: { mocha: true },
             rules: {
                 "no-restricted-syntax": ["error", {

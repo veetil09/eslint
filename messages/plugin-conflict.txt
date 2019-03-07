@@ -1,0 +1,11 @@
+ESLint found that the plugin "<%- pluginName %>" was conflicted.
+
+The following config files loaded the different versions of the plugin:
+
+1. <%- importerPath1 %>
+2. <%- importerPath2 %>
+
+ESLint cannot load the multiple versions of a plugin at the same time.
+Please resolve that conflict.
+
+If you still have problems, please stop by https://gitter.im/eslint/eslint to chat with the team.

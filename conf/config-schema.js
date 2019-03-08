@@ -16,7 +16,19 @@ const baseConfigProperties = {
     },
     parser: { type: ["string", "null"] },
     parserOptions: { type: "object" },
-    plugins: { type: "array" },
+    plugins: {
+        anyOf: [
+            {
+                type: "array",
+                items: { type: "string" },
+                additionalItems: false
+            },
+            {
+                type: "object",
+                additionalProperties: { type: "string" }
+            }
+        ]
+    },
     rules: { type: "object" },
     settings: { type: "object" }
 };

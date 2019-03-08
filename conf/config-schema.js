@@ -46,7 +46,7 @@ const configSchema = {
         },
 
         // Config at top-level.
-        topLevelConfig: {
+        objectConfig: {
             type: "object",
             properties: Object.assign(
                 {
@@ -70,10 +70,26 @@ const configSchema = {
             ),
             required: ["files"],
             additionalProperties: false
+        },
+
+        // Config as an array
+        arrayConfig: {
+            type: "array",
+            items: {
+                anyOf: [
+                    { type: "string" },
+                    { $ref: "#/definitions/objectConfig" },
+                    { $ref: "#/definitions/overrideConfig" }
+                ]
+            },
+            additionalItems: false
         }
     },
 
-    $ref: "#/definitions/topLevelConfig"
+    anyOf: [
+        { $ref: "#/definitions/objectConfig" },
+        { $ref: "#/definitions/arrayConfig" }
+    ]
 };
 
 module.exports = configSchema;

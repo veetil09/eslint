@@ -79,7 +79,8 @@ const configSchema = {
                 anyOf: [
                     { type: "string" },
                     { $ref: "#/definitions/objectConfig" },
-                    { $ref: "#/definitions/overrideConfig" }
+                    { $ref: "#/definitions/overrideConfig" },
+                    { $ref: "#/definitions/arrayConfig" }
                 ]
             },
             additionalItems: false
